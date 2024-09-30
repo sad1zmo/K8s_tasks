@@ -52,7 +52,7 @@ metadata:
 ---
 apiVersion: v1
 data:
-  .dockerconfigjson: eyJhdXRocyI6eyJyZWdpc3RyeS5yZWJyYWlubWUuY29tIjp7InVzZXJuYW1lIjoicHVsbC1jcmVkcyIsInBhc3N3b3JkIjoiZ2xwYXQtdm5wTF9pdjdXeGR6QjJRUXVLRUUiLCJhdXRoIjoiY0hWc2JDMWpjbVZrY3pwbmJIQmhkQzEyYm5CTVgybDJOMWQ0WkhwQ01sRlJkVXRGUlE9PSJ9fX0=
+  .dockerconfigjson: eyJhdXRocyI6...iY0hWc2JDMWpjbVZrY3pwbmJIQmhkQzEyYm5CTVgybDJOMWQ0WkhwQ01sRlJkVXRGUlE9PSJ9fX0=
 kind: Secret
 metadata:
   creationTimestamp: null
