@@ -1,5 +1,5 @@
 Изучите документацию по downwardAPI(https://kubernetes.io/docs/concepts/workloads/pods/downward-api/)
-Создайте imagepullsecret с именем regcred из логина pull-creds и пароля glpat-vnpL_iv7WxdzB2QQuKEE для регистри registry.rebrainme.com.
+Создайте imagepullsecret с именем regcred из логина pull-creds и пароля "..." для регистри registry.rebrainme.com.
 Создайте под с именем nginx, который использует данный imagepullsecret и образ image: registry.rebrainme.com/workshops/middle/kubernetes-local/newplatform_autochecks/nginx:latest.
 Создайте конфигмап с именем nginx-config и содержимым из файла nginx.conf (файл можно выгрузить из любого пода с nginx командой kubectl exec $podname -- cat /etc/nginx/nginx.conf > nginx.conf) 
 и измените число worker_process в этом файле на 4.
