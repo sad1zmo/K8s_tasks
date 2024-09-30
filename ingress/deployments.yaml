@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-main
+  labels:
+    app: dep-main
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dep-main
+  template:
+    metadata:
+      labels:
+        app: dep-main
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-canary
+  labels:
+    app: dep-canary
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dep-canary
+  template:
+    metadata:
+      labels:
+        app: dep-canary
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+

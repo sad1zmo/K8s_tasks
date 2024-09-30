@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-persistent-deployment
+  labels:
+    app: my-persistent-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: alpine
+  template:
+    metadata:
+      labels:
+        app: alpine
+    spec:
+      containers:
+      - name: persistent-container
+        image: alpine:3.19
+        command: ['sh', '-c', 'while true; do sleep 3600; done']
+        volumeMounts:
+        - mountPath: "/mnt/my-storage"
+          name: mypd
+        ports:
+        - containerPort: 80
+      volumes:
+      - name: mypd
+        persistentVolumeClaim:
+          claimName: my-storage
+

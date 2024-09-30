@@ -1,0 +1,150 @@
+# Deployments
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-main
+  labels:
+    app: dep-main
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dep-main
+  template:
+    metadata:
+      labels:
+        app: dep-main
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-canary
+  labels:
+    app: dep-canary
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dep-canary
+  template:
+    metadata:
+      labels:
+        app: dep-canary
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+
+# Services
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: svc-dep-main
+  name: svc-dep-main
+spec:
+  ports:
+  - name: 8080-80
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  - name: 8443-443
+    port: 8443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: dep-main
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: svc-dep-canary
+  name: svc-dep-canary
+spec:
+  ports:
+  - name: 9090-80
+    port: 9090
+    protocol: TCP
+    targetPort: 80
+  - name: 9443-443
+    port: 9443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: dep-canary
+  type: ClusterIP
+
+#Secrets
+---
+apiVersion: v1
+data:
+  auth: dGVzdDokYXByMSRuYTJ4ek5CbCRRc3hTU2VKUC4vaExlQ0NMSnJLZFkuCg==
+kind: Secret
+metadata:
+  creationTimestamp: null
+  name: basic-auth-secret
+
+#Ingresses
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingr-main
+  annotations:
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth-secret
+    nginx.ingress.kubernetes.io/auth-realm: 'Authentication Required - test'
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: main-127.0.0.1.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: svc-dep-main
+            port:
+              number: 8080
+    
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingr-canary
+  annotations:
+    nginx.ingress.kubernetes.io/canary: "true"
+    nginx.ingress.kubernetes.io/canary-weight: "50"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: main-127.0.0.1.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: svc-dep-canary
+            port:
+              number: 9090
+ 
+
+

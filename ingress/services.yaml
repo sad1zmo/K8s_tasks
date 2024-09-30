@@ -1,0 +1,41 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: svc-dep-main
+  name: svc-dep-main
+spec:
+  ports:
+  - name: 8080-80
+    port: 8080
+    protocol: TCP
+    targetPort: 80
+  - name: 8443-443
+    port: 8443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: dep-main
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: svc-dep-canary
+  name: svc-dep-canary
+spec:
+  ports:
+  - name: 9090-80
+    port: 9090
+    protocol: TCP
+    targetPort: 80
+  - name: 9443-443
+    port: 9443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: dep-canary
+  type: ClusterIP
